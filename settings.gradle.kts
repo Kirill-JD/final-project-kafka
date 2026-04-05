@@ -1,10 +1,11 @@
 rootProject.name = "final-project-kafka"
 
 include(
+    ":apps:analytics-service",
+    ":apps:blacklist-service",
+    ":apps:client-service",
     ":apps:shop-producer",
-    "apps:client-service",
-    "apps:common",
-    "apps:stream-processor",
-    "apps:analytics-service",
-    "apps:blacklist-service"
+    ":apps:stream-processor"
 )
+
+include(":libs:kafka-helper")
