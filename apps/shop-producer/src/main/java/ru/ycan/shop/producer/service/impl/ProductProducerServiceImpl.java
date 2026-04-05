@@ -2,10 +2,9 @@ package ru.ycan.shop.producer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.ycan.kafka.helper.pojo.Product;
+import ru.ycan.kafka.helper.pojo.ProductDto;
 import ru.ycan.shop.producer.config.props.KafkaProperties;
 import ru.ycan.shop.producer.service.ProductProducerService;
 
@@ -19,12 +18,12 @@ import static ru.ycan.shop.producer.messages.Messages.*;
 public class ProductProducerServiceImpl implements ProductProducerService {
 
     private final KafkaProperties properties;
-    private final KafkaTemplate<String, Product> kafkaTemplate;
+    private final KafkaTemplate<String, ProductDto> kafkaTemplate;
 
     @Override
-    public void sendRecords(List<Product> products) {
+    public void sendRecords(List<ProductDto> productDtos) {
         try {
-            products.forEach(this::send);
+            productDtos.forEach(this::send);
             kafkaTemplate.flush();
             log.info(INFO_SUCCESS_SEND_ALL_MESSAGES_KAFKA.getValue(), properties.topic().out());
         } catch (Exception e) {
@@ -32,8 +31,8 @@ public class ProductProducerServiceImpl implements ProductProducerService {
         }
     }
 
-    private void send(Product product) {
-        kafkaTemplate.send(properties.topic().out(), product.productId(), product);
-        log.info(INFO_SEND_MESSAGE_KAFKA.getValue(), properties.topic().out(), product.productId(), product);
+    private void send(ProductDto productDto) {
+        kafkaTemplate.send(properties.topic().out(), productDto.productId(), productDto);
+        log.info(INFO_SEND_MESSAGE_KAFKA.getValue(), properties.topic().out(), productDto.productId(), productDto);
     }
 }

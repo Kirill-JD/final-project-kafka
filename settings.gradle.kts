@@ -8,4 +8,4 @@ include(
     ":apps:stream-processor"
 )
 
-include(":libs:kafka-helper")
+include(":libs:common")

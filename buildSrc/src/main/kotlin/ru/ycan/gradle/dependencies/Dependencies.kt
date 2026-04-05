@@ -6,6 +6,7 @@ object Versions {
     const val kafka = "3.9.1"
     const val kafkaAvroSerializer = "7.6.0"
     const val lombok = "1.18.38"
+    const val mapstruct = "1.5.5.Final"
     const val picocli = "4.7.4"
 }
 
@@ -24,6 +25,8 @@ object Deps {
         const val kafkaClients = "org.apache.kafka:kafka-clients:${Versions.kafka}"
         const val kafkaAvroSerializer ="io.confluent:kafka-avro-serializer:${Versions.kafkaAvroSerializer}"
         const val lombok = "org.projectlombok:lombok:${Versions.lombok}"
+        const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"
+        const val mapstructProcessor = "org.mapstruct:mapstruct-processor:${Versions.mapstruct}"
         const val picocli = "info.picocli:picocli-spring-boot-starter:${Versions.picocli}"
         const val postgres = "org.postgresql:postgresql"
     }

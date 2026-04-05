@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import ru.ycan.kafka.helper.pojo.Product;
+import ru.ycan.kafka.helper.pojo.ProductDto;
 import ru.ycan.shop.producer.exceptions.FileReaderException;
 import ru.ycan.shop.producer.service.FileReadService;
 
@@ -25,11 +25,11 @@ public class FileReadServiceImpl implements FileReadService {
     private String path;
 
     @Override
-    public List<Product> loadProductDataFromFile() {
+    public List<ProductDto> loadProductDataFromFile() {
         try {
             log.info(INFO_START_FILE_READ.getValue(), path);
             File file = new ClassPathResource(path).getFile();
-            var products = MAPPER.readValue(file, new TypeReference<List<Product>>(){});
+            var products = MAPPER.readValue(file, new TypeReference<List<ProductDto>>(){});
             log.info(INFO_SUCCESS_FILE_READ.getValue(), products.size());
             return products;
 
