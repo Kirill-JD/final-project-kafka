@@ -18,7 +18,7 @@ public class ClientCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("Client API Emulator started.");
+        System.out.println("Client API Emulator started...");
         System.out.print("Введите ваш user_id: ");
         String userId = SCANNER.nextLine();
         while (true) {
@@ -31,7 +31,7 @@ public class ClientCommandLineRunner implements CommandLineRunner {
             String[] parts = input.split(" ", 2);
             switch (parts[0]) {
                 case "search" -> searchProcess(userId, parts);
-                case "recommend" ->  recommendationService.getRecommendations(userId);
+                case "recommend" -> recommendationService.getRecommendations(userId);
                 default -> System.out.println("Неизвестная команда");
             }
         }

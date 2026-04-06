@@ -23,6 +23,7 @@ object Deps {
         const val jacksonDatabind = "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
         const val jacksonDatatypeJsr310 = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}"
         const val kafkaClients = "org.apache.kafka:kafka-clients:${Versions.kafka}"
+        const val kafkaStreams = "org.apache.kafka:kafka-streams:${Versions.kafka}"
         const val kafkaAvroSerializer ="io.confluent:kafka-avro-serializer:${Versions.kafkaAvroSerializer}"
         const val lombok = "org.projectlombok:lombok:${Versions.lombok}"
         const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"

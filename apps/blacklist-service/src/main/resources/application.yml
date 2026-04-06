@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shop
+    username: postgres-user
+    password: postgres-pw
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+kafka:
+  bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.BooleanSerializer
+  topics:
+    in: product-topic
+    out: filter-product-topic
+    global: blacklist-words-topic
