@@ -1,0 +1,11 @@
+{
+  "name": "mirror2",
+  "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
+  "source.cluster.alias":"source",
+  "topics.regex": ".*",
+  "source.cluster.bootstrap.servers":"kafka1:29092,kafka2:29093,kafka3:29094",
+  "target.cluster.bootstrap.servers":"kafka4:29095,kafka5:29096,kafka6:29097",
+  "producer.override.bootstrap.servers":"kafka4:29095,kafka5:29096,kafka6:29097",
+  "offset-syncs.topic.replication.factor":"2",
+  "refresh.topics.interval.seconds": "30"
+}
