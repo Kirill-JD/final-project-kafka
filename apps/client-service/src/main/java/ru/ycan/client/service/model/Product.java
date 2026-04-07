@@ -1,62 +1,42 @@
 package ru.ycan.client.service.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
 @Data
-@Entity
-@Table(name = "product")
+@Document(indexName = "filtered-product-topic")
 public class Product {
 
     @Id
-    @Column(name = "product_id")
+    @Field(name = "product_id", type = FieldType.Keyword)
     private String productId;
-
+    @Field(type = FieldType.Keyword)
     private String name;
-
-    @Column(columnDefinition = "TEXT")
     private String description;
-
     private String category;
     private String brand;
     private String sku;
-
-    @Column(name = "store_id")
+    @Field(name = "store_id")
     private String storeId;
-
-    @Column(name = "index_name")
+    @Field(name = "index_name")
     private String indexName;
-
-    @Column(name = "created_at")
+    @Field(name = "created_at")
     private String createdAt;
-
-    @Column(name = "updated_at")
+    @Field(name = "updated_at")
     private String updatedAt;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "amount", column = @Column(name = "price_amount")),
-            @AttributeOverride(name = "currency", column = @Column(name = "price_currency"))
-    })
+    @Field(type = FieldType.Object)
     private Price price;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "available", column = @Column(name = "stock_available")),
-            @AttributeOverride(name = "reserved", column = @Column(name = "stock_reserved"))
-    })
+    @Field(type = FieldType.Object)
     private Stock stock;
-
-    @ElementCollection
-    @CollectionTable(name = "product_tags", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "tag")
+    @Field(type = FieldType.Nested)
     private List<String> tags;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images;
-
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ProductSpecification specification;
+    @Field(type = FieldType.Nested)
+    private List<Image> images;
+    @Field(type = FieldType.Object)
+    private Specification specification;
 }

@@ -22,14 +22,16 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     private final ProductMapper mapper;
 
     public void searchProduct(String userId, String productName) {
-        var optionalProduct = repository.findByName(productName);
+        var products = repository.findByNameContainingIgnoreCase(productName);
 
         // Отправляем событие поиска в Kafka
         ClientRequestEvent event = new ClientRequestEvent(userId, SEARCH, ZonedDateTime.now());
         producer.sendEvent(event);
 
-        optionalProduct.ifPresentOrElse(
-                product -> System.out.println("Найденный товар: " + mapper.toProductResponse(product)),
-                () -> System.out.printf("Не смогли найти товар '%s'\n", productName));
+        if (products.isEmpty()) {
+            System.out.printf("Не смогли найти товар '%s'\n", productName);
+        } else {
+            System.out.println("Найденные товары: " + mapper.toProductsResponse(products));
+        }
     }
 }

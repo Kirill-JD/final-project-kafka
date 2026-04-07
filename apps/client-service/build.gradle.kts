@@ -9,14 +9,14 @@ dependencies {
     annotationProcessor(Deps.Other.mapstructProcessor)
 
     implementation(Deps.Spring.springBootStarter)
-    implementation(Deps.Spring.springBootStarterDataJpa)
+    implementation(Deps.Spring.springBootStarterDataElasticsearch)
     implementation(Deps.Spring.springKafka)
 
+    implementation(Deps.Other.elasticsearch)
     implementation(Deps.Other.jacksonDatabind)
     implementation(Deps.Other.jacksonDatatypeJsr310)
     implementation(Deps.Other.mapstruct)
     implementation(Deps.Other.picocli)
-    implementation(Deps.Other.postgres)
     implementation(project(":libs:common"))
 }
 

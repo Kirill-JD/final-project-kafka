@@ -1,27 +1,19 @@
 package ru.ycan.client.service.model;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
 @Data
-@Entity
-@Table(name = "recommendation")
+@Document(indexName = "recommendation")
 public class Recommendation {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "user_id", nullable = false)
+    @Field(name = "user_id", type = FieldType.Keyword)
     private String userId;
-
-    @ManyToMany
-    @JoinTable(
-            name = "recommendation_products",
-            joinColumns = @JoinColumn(name = "recommendation_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
+    @Field(type = FieldType.Nested)
     private List<Product> products;
 }

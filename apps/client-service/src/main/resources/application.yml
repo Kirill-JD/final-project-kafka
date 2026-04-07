@@ -1,13 +1,7 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/shop
-    username: postgres-user
-    password: postgres-pw
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
+  elasticsearch:
+    rest:
+      uris: http://elasticsearch:9200
 
 kafka:
   bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
