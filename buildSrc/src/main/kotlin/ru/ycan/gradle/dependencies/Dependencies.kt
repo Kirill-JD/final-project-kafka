@@ -2,6 +2,7 @@ object Versions {
     const val jvm = "17"
     const val springBoot = "3.4.5"
 
+    const val elasticsearch = "7.15.2"
     const val jackson = "2.17.2"
     const val kafka = "3.9.1"
     const val kafkaAvroSerializer = "7.6.0"
@@ -14,11 +15,12 @@ object Deps {
 
     object Spring {
         const val springBootStarter = "org.springframework.boot:spring-boot-starter"
-        const val springBootStarterDataJpa = "org.springframework.boot:spring-boot-starter-data-jpa"
+        const val springBootStarterDataElasticsearch = "org.springframework.boot:spring-boot-starter-data-elasticsearch"
         const val springKafka = "org.springframework.kafka:spring-kafka"
     }
 
     object Other {
+        const val elasticsearch = "org.elasticsearch.client:elasticsearch-rest-high-level-client:${Versions.elasticsearch}"
         const val jacksonAnnotations = "com.fasterxml.jackson.core:jackson-annotations:${Versions.jackson}"
         const val jacksonDatabind = "com.fasterxml.jackson.core:jackson-databind:${Versions.jackson}"
         const val jacksonDatatypeJsr310 = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}"
@@ -29,6 +31,5 @@ object Deps {
         const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"
         const val mapstructProcessor = "org.mapstruct:mapstruct-processor:${Versions.mapstruct}"
         const val picocli = "info.picocli:picocli-spring-boot-starter:${Versions.picocli}"
-        const val postgres = "org.postgresql:postgresql"
     }
 }

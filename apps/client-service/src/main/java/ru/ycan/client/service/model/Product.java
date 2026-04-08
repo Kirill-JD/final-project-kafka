@@ -6,10 +6,11 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
-@Document(indexName = "filtered-product-topic")
+@Document(indexName = "filter-product-topic")
 public class Product {
 
     @Id
@@ -26,9 +27,9 @@ public class Product {
     @Field(name = "index_name")
     private String indexName;
     @Field(name = "created_at")
-    private String createdAt;
+    private ZonedDateTime createdAt;
     @Field(name = "updated_at")
-    private String updatedAt;
+    private ZonedDateTime updatedAt;
     @Field(type = FieldType.Object)
     private Price price;
     @Field(type = FieldType.Object)

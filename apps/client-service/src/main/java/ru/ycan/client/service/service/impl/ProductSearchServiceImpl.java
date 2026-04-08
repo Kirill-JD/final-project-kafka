@@ -22,9 +22,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     private final ProductMapper mapper;
 
     public void searchProduct(String userId, String productName) {
-        var products = repository.findByNameContainingIgnoreCase(productName);
-
-        // Отправляем событие поиска в Kafka
+        var products = repository.searchByName(productName);
         ClientRequestEvent event = new ClientRequestEvent(userId, SEARCH, ZonedDateTime.now());
         producer.sendEvent(event);
 

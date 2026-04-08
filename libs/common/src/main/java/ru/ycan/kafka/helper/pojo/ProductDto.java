@@ -1,5 +1,6 @@
 package ru.ycan.kafka.helper.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
@@ -18,8 +19,10 @@ public record ProductDto(@JsonProperty("product_id") String productId,
                          @JsonProperty("images") List<Image> images,
                          @JsonProperty("specifications") Specifications specifications,
                          @JsonProperty("created_at")
+                         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
                          ZonedDateTime createdAt,
                          @JsonProperty("updated_at")
+                         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
                          ZonedDateTime updatedAt,
                          @JsonProperty("index") String index,
                          @JsonProperty("store_id") String storeId
