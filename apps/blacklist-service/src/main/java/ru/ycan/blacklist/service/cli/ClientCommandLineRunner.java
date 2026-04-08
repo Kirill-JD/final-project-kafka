@@ -19,7 +19,7 @@ public class ClientCommandLineRunner implements CommandLineRunner {
         System.out.println("Blacklist started...");
         while (true) {
             System.out.print("Введите 'name' товара для блокировки (или \\exit для выхода): ");
-            String productName = SCANNER.nextLine();
+            String productName = SCANNER.nextLine().trim();
             if (productName.isBlank()) {
                 System.out.println("Некорректное значение, повторите попытку");
                 continue;

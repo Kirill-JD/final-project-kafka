@@ -15,7 +15,3 @@ dependencies {
     implementation(Deps.Other.picocli)
     implementation(project(":libs:common"))
 }
-
-tasks.test {
-    useJUnitPlatform()
-}

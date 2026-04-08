@@ -4,8 +4,7 @@ include(
     ":apps:analytics-service",
     ":apps:blacklist-service",
     ":apps:client-service",
-    ":apps:shop-producer",
-    ":apps:stream-processor"
+    ":apps:shop-producer"
 )
 
 include(":libs:common")

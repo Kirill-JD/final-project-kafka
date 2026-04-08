@@ -13,7 +13,3 @@ dependencies {
     implementation(Deps.Other.jacksonDatatypeJsr310)
     implementation(project(":libs:common"))
 }
-
-tasks.test {
-    useJUnitPlatform()
-}
