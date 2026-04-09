@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 import ru.ycan.shop.producer.config.props.KafkaProperties;
 
 import java.util.HashMap;

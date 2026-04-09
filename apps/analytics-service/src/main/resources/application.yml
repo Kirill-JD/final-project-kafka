@@ -1,0 +1,14 @@
+kafka:
+  bootstrap-servers: kafka4:29095,kafka5:29096,kafka6:29097
+  topics:
+    in: filter-product-topic
+    out: recommendation-product-topic
+
+hdfs:
+  uri: hdfs://hadoop-namenode:9000
+  path: /data/analytics
+
+analytics:
+  column: category
+  values:
+    - Электроника

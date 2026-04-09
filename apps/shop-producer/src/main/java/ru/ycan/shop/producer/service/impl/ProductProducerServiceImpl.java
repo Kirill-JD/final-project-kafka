@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 import ru.ycan.shop.producer.config.props.KafkaProperties;
 import ru.ycan.shop.producer.service.ProductProducerService;
 

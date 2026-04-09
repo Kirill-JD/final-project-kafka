@@ -4,11 +4,13 @@ object Versions {
 
     const val elasticsearch = "7.15.2"
     const val jackson = "2.17.2"
+    const val hadoopClient = "3.3.6"
     const val kafka = "3.9.1"
     const val kafkaAvroSerializer = "7.6.0"
     const val lombok = "1.18.38"
     const val mapstruct = "1.5.5.Final"
     const val picocli = "4.7.4"
+    const val spark = "3.5.1"
 }
 
 object Deps {
@@ -31,5 +33,8 @@ object Deps {
         const val mapstruct = "org.mapstruct:mapstruct:${Versions.mapstruct}"
         const val mapstructProcessor = "org.mapstruct:mapstruct-processor:${Versions.mapstruct}"
         const val picocli = "info.picocli:picocli-spring-boot-starter:${Versions.picocli}"
+        const val hadoopClient = "org.apache.hadoop:hadoop-client:${Versions.hadoopClient}"
+        const val sparkSql = "org.apache.spark:spark-sql_2.12:${Versions.spark}"
+        const val sparkSqlKafka = "org.apache.spark:spark-sql-kafka-0-10_2.12:${Versions.spark}"
     }
 }

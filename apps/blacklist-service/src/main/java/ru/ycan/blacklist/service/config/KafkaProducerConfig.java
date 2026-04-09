@@ -8,7 +8,6 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import ru.ycan.blacklist.service.config.props.KafkaProperties;
-import ru.ycan.kafka.helper.pojo.ProductDto;
 
 import java.util.HashMap;
 import java.util.Map;

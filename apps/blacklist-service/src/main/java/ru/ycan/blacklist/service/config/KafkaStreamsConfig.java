@@ -14,7 +14,7 @@ import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import org.springframework.kafka.support.serializer.JsonSerde;
 import ru.ycan.blacklist.service.config.props.KafkaProperties;
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 
 import java.util.HashMap;
 import java.util.Map;

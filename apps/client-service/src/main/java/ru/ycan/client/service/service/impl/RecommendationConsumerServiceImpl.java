@@ -8,7 +8,7 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.stereotype.Service;
 import ru.ycan.client.service.service.RecommendationConsumerService;
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 
 import java.time.Duration;
 import java.util.ArrayList;

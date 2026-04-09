@@ -1,6 +1,6 @@
 package ru.ycan.shop.producer.service;
 
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 
 import java.util.List;
 

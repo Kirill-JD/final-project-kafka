@@ -1,4 +1,4 @@
-package ru.ycan.kafka.helper.pojo;
+package ru.ycan.libs.common.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -3,7 +3,7 @@ package ru.ycan.client.service.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import ru.ycan.client.service.model.Product;
-import ru.ycan.kafka.helper.pojo.ProductDto;
+import ru.ycan.libs.common.pojo.ProductDto;
 
 import java.util.List;
 
