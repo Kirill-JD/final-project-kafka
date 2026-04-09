@@ -1,7 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version Versions.springBoot
-	id("io.spring.dependency-management") version "1.1.7"
+	`maven-publish`
 }
 
 group = "ru.ycan"
@@ -21,12 +20,28 @@ configurations {
 
 allprojects {
 	apply(plugin = "java")
+	apply(plugin = "maven-publish")
 	repositories {
+		mavenLocal()
 		mavenCentral()
+		gradlePluginPortal()
+		// без VPN нормально не скачивает
 		maven(url = "https://packages.confluent.io/maven/")
 	}
 
 	tasks.withType<Test> {
 		useJUnitPlatform()
+	}
+
+	tasks.withType<JavaCompile> {
+		options.release.set(Versions.jvm)
+	}
+
+	publishing {
+		publications {
+			create<MavenPublication>("mavenJava") {
+				from(components["java"])
+			}
+		}
 	}
 }

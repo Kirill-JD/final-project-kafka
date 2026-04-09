@@ -3,15 +3,15 @@ package ru.ycan.client.service.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.ycan.client.service.mapper.ProductMapper;
-import ru.ycan.client.service.pojo.ClientRequestEvent;
 import ru.ycan.client.service.repository.ProductRepository;
 import ru.ycan.client.service.service.ClientEventProducerService;
 import ru.ycan.client.service.service.RecommendationConsumerService;
+import ru.ycan.libs.avro.schemas.ClientRequestEvent;
 
 import java.time.ZonedDateTime;
 
-import static ru.ycan.client.service.pojo.EventTypes.RECOMMENDATION;
-import static ru.ycan.client.service.pojo.EventTypes.SEARCH;
+import static ru.ycan.libs.avro.schemas.EventTypes.RECOMMENDATION;
+import static ru.ycan.libs.avro.schemas.EventTypes.SEARCH;
 
 @Component
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class Handler {
         var recommendationProducts = consumer.getRecommendationProducts();
 
         // Создаем событие
-        ClientRequestEvent event = ClientRequestEvent.builder()
-                                                     .userId(userId)
-                                                     .eventType(RECOMMENDATION)
-                                                     .eventTime(ZonedDateTime.now())
+        ClientRequestEvent event = ClientRequestEvent.newBuilder()
+                                                     .setUserId(userId)
+                                                     .setEventType(RECOMMENDATION)
+                                                     .setEventTime(ZonedDateTime.now().toInstant())
                                                      .build();
         producer.sendEvent(event);
 
@@ -41,10 +41,11 @@ public class Handler {
 
     public void searchProduct(String userId, String productName) {
         var products = repository.searchByName(productName);
-        ClientRequestEvent event = ClientRequestEvent.builder()
-                                                     .userId(userId).eventType(SEARCH)
-                                                     .query(productName)
-                                                     .eventTime(ZonedDateTime.now())
+        ClientRequestEvent event = ClientRequestEvent.newBuilder()
+                                                     .setUserId(userId)
+                                                     .setEventType(SEARCH)
+                                                     .setQueryBody(productName)
+                                                     .setEventTime(ZonedDateTime.now().toInstant())
                                                      .build();
         producer.sendEvent(event);
 

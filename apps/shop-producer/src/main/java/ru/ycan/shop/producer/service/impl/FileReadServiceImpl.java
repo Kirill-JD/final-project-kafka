@@ -1,41 +1,64 @@
 package ru.ycan.shop.producer.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
+import org.apache.avro.io.Decoder;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.specific.SpecificDatumReader;
 import org.springframework.stereotype.Service;
-import ru.ycan.libs.common.pojo.ProductDto;
+import ru.ycan.libs.avro.schemas.ProductAvro;
+import ru.ycan.shop.producer.config.props.FileProperties;
 import ru.ycan.shop.producer.exceptions.FileReaderException;
 import ru.ycan.shop.producer.service.FileReadService;
 
-import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static ru.ycan.shop.producer.messages.Messages.*;
+import static ru.ycan.shop.producer.messages.Messages.ERROR_FILE_READ;
+import static ru.ycan.shop.producer.messages.Messages.INFO_START_FILES_READ;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class FileReadServiceImpl implements FileReadService {
-    private static final ObjectMapper MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
+    private static final SpecificDatumReader<ProductAvro> READER = new SpecificDatumReader<>(ProductAvro.class);
 
-    @Value("${files.input.path}")
-    private String path;
+    private final FileProperties fileProperties;
 
     @Override
-    public List<ProductDto> loadProductDataFromFile() {
-        try {
-            log.info(INFO_START_FILE_READ.getValue(), path);
-            File file = new ClassPathResource(path).getFile();
-            var products = MAPPER.readValue(file, new TypeReference<List<ProductDto>>(){});
-            log.info(INFO_SUCCESS_FILE_READ.getValue(), products.size());
-            return products;
+    public List<ProductAvro> loadProductDataFromFile() {
+        log.info(INFO_START_FILES_READ.getValue(), fileProperties.path());
+        List<ProductAvro> products = new ArrayList<>();
 
+        try (var stream = Files.newDirectoryStream(getPath(), "*.json")) {
+            for (Path path : stream) {
+                String json = Files.readString(path);
+                Decoder decoder = DecoderFactory.get().jsonDecoder(ProductAvro.getClassSchema(), json);
+                ProductAvro product = READER.read(null, decoder);
+                products.add(product);
+            }
+            return products;
         } catch (Exception e) {
             log.error(ERROR_FILE_READ.getValue(), e);
             throw new FileReaderException(ERROR_FILE_READ.getValue(), e);
+        }
+    }
+
+    // лучше конечно по абсолютному пути итд, но в качестве учебного думаю ок (а то лишние телодвижения)
+    private Path getPath() {
+        try {
+            URI uri = Objects.requireNonNull(FileReadServiceImpl.class.getClassLoader()
+                                                                      .getResource(fileProperties.path())).toURI();
+            return Paths.get(uri);
+        } catch (URISyntaxException e) {
+            log.error("Не удалось получить путь до директории");
+            throw new IllegalStateException(e);
         }
     }
 }

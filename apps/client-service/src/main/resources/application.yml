@@ -1,17 +1,27 @@
 spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      retries: 3
+      properties:
+        schema.registry.url: http://localhost:8081
+
   elasticsearch:
     rest:
       uris: http://elasticsearch:9200
 
 kafka:
-  producer:
-    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
   consumer:
     bootstrap-servers: localhost:9095,localhost:9096,localhost:9097
     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    acks: all
+    retries: 3
+    schema-registry-url: http://localhost:8081
+    specific-avro-reader: true
   topics:
     in: recommendation-product-topic
     out: client-events-topic

@@ -8,7 +8,7 @@ import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.stereotype.Service;
 import ru.ycan.client.service.service.RecommendationConsumerService;
-import ru.ycan.libs.common.pojo.ProductDto;
+import ru.ycan.libs.avro.schemas.ProductAvro;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -21,15 +21,15 @@ import java.util.Map;
 public class RecommendationConsumerServiceImpl implements RecommendationConsumerService {
     private static final int LIMIT_RECOMMENDATION = 5;
 
-    private final KafkaConsumer<String, ProductDto> consumer;
+    private final KafkaConsumer<String, ProductAvro> consumer;
 
 
-    public List<ProductDto> getRecommendationProducts() {
-        List<ProductDto> result = new ArrayList<>();
+    public List<ProductAvro> getRecommendationProducts() {
+        List<ProductAvro> result = new ArrayList<>();
         Map<TopicPartition, OffsetAndMetadata> offsetsToCommit = new HashMap<>();
 
-        ConsumerRecords<String, ProductDto> records = consumer.poll(Duration.ofSeconds(10));
-        for (ConsumerRecord<String, ProductDto> record : records) {
+        ConsumerRecords<String, ProductAvro> records = consumer.poll(Duration.ofSeconds(10));
+        for (ConsumerRecord<String, ProductAvro> record : records) {
             result.add(record.value());
             offsetsToCommit.put(new TopicPartition(record.topic(), record.partition()),
                                 new OffsetAndMetadata(record.offset() + 1));

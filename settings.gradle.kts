@@ -7,4 +7,4 @@ include(
     ":apps:shop-producer"
 )
 
-include(":libs:common")
+include(":libs:avro-schemas")

@@ -1,9 +1,9 @@
 package ru.ycan.client.service.service;
 
-import ru.ycan.libs.common.pojo.ProductDto;
+import ru.ycan.libs.avro.schemas.ProductAvro;
 
 import java.util.List;
 
 public interface RecommendationConsumerService {
-    List<ProductDto> getRecommendationProducts();
+    List<ProductAvro> getRecommendationProducts();
 }

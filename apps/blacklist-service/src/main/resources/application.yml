@@ -1,8 +1,19 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.BooleanSerializer
+      acks: all
+      retries: 3
+    streams:
+      application-id: blacklist-app
+      properties:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        schema.registry.url: http://localhost:8081
+
 kafka:
-  bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
-  producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.BooleanSerializer
   topics:
     in: product-topic
     out: filter-product-topic

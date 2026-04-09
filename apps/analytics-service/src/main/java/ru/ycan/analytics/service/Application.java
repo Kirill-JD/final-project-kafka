@@ -5,14 +5,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import ru.ycan.analytics.service.service.AnalyticsService;
+import ru.ycan.analytics.service.handler.AnalyticsHandler;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 @ConfigurationPropertiesScan
 public class Application implements CommandLineRunner {
 
-    private final AnalyticsService analyticsService;
+    private final AnalyticsHandler handler;
 
     public static void main(String... args) {
         SpringApplication.run(Application.class, args);
@@ -20,6 +20,6 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        analyticsService.analyticsProcess();
+        handler.analyticsProcess();
     }
 }

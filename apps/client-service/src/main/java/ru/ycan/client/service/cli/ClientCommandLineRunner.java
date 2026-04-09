@@ -2,6 +2,8 @@ package ru.ycan.client.service.cli;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.ycan.client.service.handler.Handler;
 
@@ -12,6 +14,7 @@ import java.util.Scanner;
 public class ClientCommandLineRunner implements CommandLineRunner {
     private static final Scanner SCANNER = new Scanner(System.in);
 
+    private final ApplicationContext context;
     private final Handler handler;
 
     @Override
@@ -24,6 +27,7 @@ public class ClientCommandLineRunner implements CommandLineRunner {
             System.out.println("search: <product_name> | recommend | exit");
             String input = SCANNER.nextLine();
             if (input.equals("exit")) {
+                SpringApplication.exit(context, () -> 0);
                 break;
             }
 

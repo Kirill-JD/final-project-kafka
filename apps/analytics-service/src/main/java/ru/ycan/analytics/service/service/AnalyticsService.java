@@ -1,16 +1,22 @@
 package ru.ycan.analytics.service.service;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.ycan.analytics.service.config.props.AnalyticsProperties;
 import ru.ycan.analytics.service.config.props.HdfsProperties;
-import ru.ycan.analytics.service.config.props.KafkaProperties;
+import ru.ycan.analytics.service.config.props.KafkaTopicsProperties;
 
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static org.apache.spark.sql.avro.functions.from_avro;
 import static org.apache.spark.sql.functions.col;
 
 @Slf4j
@@ -19,51 +25,52 @@ import static org.apache.spark.sql.functions.col;
 public class AnalyticsService {
 
     private final HdfsProperties hdfsProperties;
-    private final KafkaProperties kafkaProperties;
+    private final KafkaTopicsProperties kafkaTopicsProperties;
     private final AnalyticsProperties analyticsProperties;
+    private final SchemaRegistryService schemaRegistryService;
+    private final SparkSession spark;
+    @Value("${spring.kafka.bootstrap-servers}")
+    String bootstrapServers;
 
-    public void analyticsProcess() {
-        SparkSession spark = SparkSession.builder()
-                                         .appName("analytics-job")
-                                         .master("local[*]")
-                                         .config("spark.ui.enabled", "false")
-                                         .config("spark.hadoop.fs.defaultFS", hdfsProperties.uri())
-                                         .getOrCreate();
-
+    public void saveDataInHdfs() {
         Dataset<Row> kafkaDf = spark.read()
                                     .format("kafka")
-                                    .option("kafka.bootstrap.servers", kafkaProperties.bootstrapServers())
-                                    .option("subscribe", kafkaProperties.topics().in())
+                                    .option("kafka.bootstrap.servers", bootstrapServers)
+                                    .option("subscribe", kafkaTopicsProperties.in())
                                     .option("startingOffsets", "earliest")
                                     .load();
-        log.info("Получили '{}' записей из kafka: {}", kafkaDf.count(), kafkaDf.collectAsList());
 
-        Dataset<Row> products = kafkaDf.selectExpr("CAST(value AS STRING) as value");
-        String hdfsPath = hdfsProperties.path();
+        Dataset<Row> valueDf = kafkaDf.selectExpr("substring(value, 6) as value");
+        String schema = schemaRegistryService.getLatestSchema(kafkaTopicsProperties.in());
+
+        Dataset<Row> products = valueDf
+                .select(from_avro(col("value"), schema).alias("data"))
+                .select("data.*");
 
         products.write()
                 .mode(SaveMode.Overwrite)
-                .parquet(hdfsPath);
-        log.info("Данные записаны в HDFS: {}, {}, {}", hdfsPath, products.count(), products.collectAsList());
+                .parquet(hdfsProperties.path());
 
-        Dataset<Row> hdfsData = spark.read().parquet(hdfsPath);
+        log.info("Данные записаны в HDFS: {}, {}, {}",
+                 hdfsProperties.path(), products.count(), products.collectAsList());
+    }
+
+    public Dataset<Row> getRecommendationProducts() {
+        Dataset<Row> hdfsData = spark.read().parquet(hdfsProperties.path());
         log.info("Получено '{}' записи из HDFS: {}", hdfsData.count(), hdfsData.collectAsList());
 
-        Dataset<Row> result = hdfsData.filter(
-                col("value").like("%%\"%s\":\"%s\"%%".formatted(analyticsProperties.column(),
-                                                                analyticsProperties.values().get(0)))
-        );
+        var pattern = "(?i)(%s)".formatted(analyticsProperties.values().stream()
+                                                              .map(Pattern::quote)
+                                                              .collect(Collectors.joining("|")));
+
+        var result = hdfsData.filter(col(analyticsProperties.column()).rlike(pattern));
         log.info("Отфильтрованных записей '{}' из HDFS: {}", result.count(), result.collectAsList());
+        return result;
+    }
 
-        result.selectExpr("CAST(value AS STRING) as value")
-              .write()
-              .format("kafka")
-              .option("kafka.bootstrap.servers", kafkaProperties.bootstrapServers())
-              .option("topic", kafkaProperties.topics().out())
-              .save();
-
-        log.info("Результат отправлен в Kafka");
-
+    @PreDestroy
+    public void close() {
         spark.stop();
+        spark.close();
     }
 }

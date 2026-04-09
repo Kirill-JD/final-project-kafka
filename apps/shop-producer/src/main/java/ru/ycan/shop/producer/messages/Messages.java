@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Messages {
-    INFO_START_FILE_READ("Начинаем вычитывать данные из файла: {}"),
+    INFO_START_FILES_READ("Начинаем вычитывать данные файлов из директории: {}"),
     INFO_SUCCESS_FILE_READ("Все данные успешно получены из файла, '{}'"),
     INFO_SEND_MESSAGE_KAFKA("Сообщение отправлено в kafka. Topic: '{}', key: '{}', value: '{}'"),
     INFO_SUCCESS_SEND_ALL_MESSAGES_KAFKA("Все сообщения отправлены в топик: '{}'"),

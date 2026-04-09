@@ -1,0 +1,35 @@
+{
+  "type": "record",
+  "name": "ClientRequestEvent",
+  "namespace": "ru.ycan.libs.avro.schemas",
+  "fields": [
+    {
+      "name": "user_id",
+      "type": "string"
+    },
+    {
+      "name": "event_type",
+      "type": {
+        "type": "enum",
+        "name": "EventTypes",
+        "symbols": [
+          "SEARCH",
+          "RECOMMENDATION"
+        ]
+      }
+    },
+    {
+      "name": "query_body",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "event_time",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      },
+      "doc": "Unix epoch time in milliseconds"
+    }
+  ]
+}
