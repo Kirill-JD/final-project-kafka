@@ -7,7 +7,7 @@ networks:
 
 services:
   # =======================================================
-  # ================= 1 кластер ===========================
+  # =================== 1 кластер =========================
   # =======================================================
   zookeeper1:
     image: confluentinc/cp-zookeeper:7.0.1
@@ -20,7 +20,8 @@ services:
       - zk1-data:/var/lib/zookeeper/data
 
   kafka1:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper1
     environment:
@@ -34,13 +35,16 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9875:/opt/kafka-metrics.yml"
     ports:
       - "9092:9092"
+      - "9875:9875"
     volumes:
       - kafka1-data:/var/lib/kafka/data
 
   kafka2:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper1
     environment:
@@ -54,13 +58,16 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9876:/opt/kafka-metrics.yml"
     ports:
       - "9093:9093"
+      - "9876:9876"
     volumes:
       - kafka2-data:/var/lib/kafka/data
 
   kafka3:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper1
     environment:
@@ -74,14 +81,16 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9877:/opt/kafka-metrics.yml"
     ports:
       - "9094:9094"
+      - "9877:9877"
     volumes:
       - kafka3-data:/var/lib/kafka/data
 
 
   # =======================================================
-  # ================= 2 кластер ===========================
+  # =================== 2 кластер =========================
   # =======================================================
   zookeeper2:
     image: confluentinc/cp-zookeeper:7.0.1
@@ -94,7 +103,8 @@ services:
       - zk2-data:/var/lib/zookeeper/data
 
   kafka4:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper2
     environment:
@@ -108,13 +118,16 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9878:/opt/kafka-metrics.yml"
     ports:
       - "9095:9095"
+      - "9878:9878"
     volumes:
       - kafka4-data:/var/lib/kafka/data
 
   kafka5:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper2
     environment:
@@ -128,13 +141,16 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9879:/opt/kafka-metrics.yml"
     ports:
       - "9096:9096"
+      - "9879:9879"
     volumes:
       - kafka5-data:/var/lib/kafka/data
 
   kafka6:
-    image: confluentinc/cp-kafka:7.0.1
+    build:
+      context: ./infrastructure/kafka
     depends_on:
       - zookeeper2
     environment:
@@ -148,8 +164,10 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9880:/opt/kafka-metrics.yml"
     ports:
       - "9097:9097"
+      - "9880:9880"
     volumes:
       - kafka6-data:/var/lib/kafka/data
 
@@ -168,6 +186,9 @@ services:
       SCHEMA_REGISTRY_KAFKA_BROKERS: PLAINTEXT://kafka1:29092,PLAINTEXT://kafka2:29093,PLAINTEXT://kafka3:29094
 
 
+  # =======================================================
+  # ================== Коннекторы =========================
+  # =======================================================
 #  mirror-maker-2:
 #    image: cnfldemos/cp-server-connect-datagen:0.5.3-7.1.0
 #    hostname: mirror-maker-2
@@ -240,16 +261,49 @@ services:
 #      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
 #      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081/
 #      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081/
-#
-#      KAFKA_JMX_PORT: 9875
-#      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9876:/opt/kafka-connect.yml"
-#
 #      # Пути к плагинам
 #      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
 #    volumes:
 #      - ./infrastructure/confluent-hub-components/:/etc/kafka-connect/jars
 
 
+  # =======================================================
+  # ===================== Метрики =========================
+  # =======================================================
+  grafana:
+    build:
+      context: ./infrastructure/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infrastructure/prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  alertmanager:
+    image: prom/alertmanager:v0.21.0
+    restart: unless-stopped
+    container_name: alertmanager
+    volumes:
+      - ./infrastructure/alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
+      - '--log.level=debug'
+    ports:
+      - "10000:10000"
+
+
+  # =======================================================
+  # ==================== UI kafka =========================
+  # =======================================================
   ui1:
     image: provectuslabs/kafka-ui:latest
     ports:
@@ -267,6 +321,10 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
 
 
+
+  # =======================================================
+  # ==================== Database =========================
+  # =======================================================
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
     environment:
@@ -303,7 +361,6 @@ services:
       - ./infrastructure/hadoop/namenode_entrypoint.sh:/namenode_entrypoint.sh
     entrypoint: [ "/bin/bash", "/namenode_entrypoint.sh" ]
     command: [ "hdfs", "namenode" ]
-
 
   hadoop-datanode-1:
     image: apache/hadoop:3.4.1
@@ -383,6 +440,10 @@ services:
 #    command: [ "hdfs", "datanode" ]
 
 
+  # =======================================================
+  # ===================== Spark ===========================
+  # =======================================================
+
   # Apache Spark master node
   spark-master:
     image: bitnamilegacy/spark:3.5.4
@@ -393,7 +454,6 @@ services:
     environment:
       SPARK_MODE: master
       SPARK_MASTER_HOST: spark-master
-
 
   # Apache Spark worker node
   spark-worker:
@@ -408,8 +468,8 @@ services:
 
   # Контейнер для модуля 'analytics-service' (по другому не очень хорошо получалось)
   # Раскомментить при необходимости запуска!
-  analytics-service:
-    build: .
+#  analytics-service:
+#    build: .
 
 
 volumes:

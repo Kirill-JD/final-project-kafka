@@ -1,0 +1,27 @@
+groups:
+  - name: kafka-alerts
+    rules:
+
+      - alert: KafkaBrokerDown
+        expr: up{job="kafka"} == 0
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Брокер kafka упал"
+          description: "Брокер {{ $labels.instance }} упал"
+
+      - alert: NoActiveController
+        expr: kafka_controller_kafkacontroller_activecontrollercount != 1
+        for: 30s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Нет активного контроллера в кластере"
+          description: "Нет активного контроллера в кластере"
+
+      - alert: UnderReplicatedPartitions
+        expr: kafka_server_replicamanager_underreplicatedpartitions > 0
+        for: 1m
+        labels:
+          severity: warning
