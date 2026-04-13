@@ -1,5 +1,5 @@
 {
-  "product_id": "12345",
+  "product_id": "12347",
   "name": "Песочные часы",
   "description": "Песочные часы.",
   "price": {
@@ -12,7 +12,7 @@
     "available": 150,
     "reserved": 20
   },
-  "sku": "Hourglass-12345",
+  "sku": "Hourglass-12347",
   "tags": ["часы", "песочные часы", "хобби"],
   "images": [
     {

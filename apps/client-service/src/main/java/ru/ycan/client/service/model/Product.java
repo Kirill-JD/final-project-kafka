@@ -24,8 +24,7 @@ public class Product {
     private String sku;
     @Field(name = "store_id")
     private String storeId;
-    @Field(name = "index_name")
-    private String indexName;
+    private String index;
     @Field(name = "created_at")
     private ZonedDateTime createdAt;
     @Field(name = "updated_at")
@@ -39,5 +38,5 @@ public class Product {
     @Field(type = FieldType.Nested)
     private List<Image> images;
     @Field(type = FieldType.Object)
-    private Specification specification;
+    private Specification specifications;
 }

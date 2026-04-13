@@ -189,82 +189,77 @@ services:
   # =======================================================
   # ================== Коннекторы =========================
   # =======================================================
-#  mirror-maker-2:
-#    image: cnfldemos/cp-server-connect-datagen:0.5.3-7.1.0
-#    hostname: mirror-maker-2
-#    container_name: mirror-maker-2
-#    depends_on:
-#      - kafka1
-#      - kafka2
-#      - kafka3
-#      - kafka4
-#      - kafka5
-#      - kafka6
-#      - schema-registry
-#    ports:
-#      - "8084:8083"
-#      - "28082:28082"
-#    environment:
-#      CONNECT_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
-#      CONNECT_REST_ADVERTISED_HOST_NAME: mirror-maker-2
-#      CONNECT_REST_PORT: 8084
-#      CONNECT_GROUP_ID: compose-connect-group
-#      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
-#      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
-#      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
-#      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
-#      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 2
-#      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 2
-#      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 2
-#      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-#      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-#      # CLASSPATH required due to CC-2422
-#      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-7.4.0.jar
-#      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
-#      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
-#      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-#      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
-#
-#
-#  kafka-connect:
-#    build:
-#      context: ./infrastructure/kafka-connect
-#    container_name: kafka-connect
-#    ports:
-#      - "8083:8083"  # REST API Kafka Connect
-#      - "9875:9875"
-#      - "9876:9876"
-#    depends_on:
-#      - kafka3
-#      - kafka6
-#      - schema-registry
-#      - elasticsearch
-#    environment:
-#      CONNECT_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
-#      CONNECT_REST_PORT: 8083
-#      CONNECT_GROUP_ID: 'kafka-connect'
-#      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
-#
-#      # Хранение конфигурации, смещений и статусов
-#      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-config-storage'
-#      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-offset-storage'
-#      CONNECT_STATUS_STORAGE_TOPIC: 'connect-status-storage'
-#      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 2
-#      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 2
-#      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 2
-#
-#      # Конвертеры
-#      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-#      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-#      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-#      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-#      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081/
-#      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081/
-#      # Пути к плагинам
-#      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
-#    volumes:
-#      - ./infrastructure/confluent-hub-components/:/etc/kafka-connect/jars
+  mirror-maker-2:
+    image: cnfldemos/cp-server-connect-datagen:0.5.3-7.1.0
+    hostname: mirror-maker-2
+    container_name: mirror-maker-2
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
+      - kafka4
+      - kafka5
+      - kafka6
+      - schema-registry
+    ports:
+      - "8084:8083"
+      - "28082:28082"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
+      CONNECT_REST_ADVERTISED_HOST_NAME: mirror-maker-2
+      CONNECT_REST_PORT: 8084
+      CONNECT_GROUP_ID: compose-connect-group
+
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 2
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 2
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 2
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-7.4.0.jar
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+
+
+  kafka-connect:
+    image: confluentinc/cp-kafka-connect:7.0.1
+    container_name: kafka-connect
+    ports:
+      - "8083:8083"  # REST API Kafka Connect
+    depends_on:
+      - kafka3
+      - schema-registry
+      - elasticsearch
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: 'kafka-connect'
+
+      # Хранение конфигурации, смещений и статусов
+      CONNECT_CONFIG_STORAGE_TOPIC: 'connect-config-storage'
+      CONNECT_OFFSET_STORAGE_TOPIC: 'connect-offset-storage'
+      CONNECT_STATUS_STORAGE_TOPIC: 'connect-status-storage'
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 2
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 2
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 2
+
+      # Конвертеры
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      # Пути к плагинам
+      CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
+    volumes:
+      - ./infrastructure/confluent-hub-components/:/etc/kafka-connect/jars
 
 
   # =======================================================
@@ -273,6 +268,8 @@ services:
   grafana:
     build:
       context: ./infrastructure/grafana
+    depends_on:
+      - kafka3
     container_name: grafana
     ports:
       - "3000:3000"
@@ -280,6 +277,8 @@ services:
   prometheus:
     image: prom/prometheus:v2.30.3
     container_name: prometheus
+    depends_on:
+      - kafka3
     ports:
       - "9090:9090"
     volumes:
@@ -291,6 +290,8 @@ services:
     image: prom/alertmanager:v0.21.0
     restart: unless-stopped
     container_name: alertmanager
+    depends_on:
+      - kafka3
     volumes:
       - ./infrastructure/alertmanager/alertmanager.yml:/etc/alertmanager/config.yml
     command:
@@ -306,6 +307,8 @@ services:
   # =======================================================
   ui1:
     image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka3
     ports:
       - "8079:8080"
     environment:
@@ -314,12 +317,13 @@ services:
 
   ui2:
     image: provectuslabs/kafka-ui:latest
+    depends_on:
+      - kafka6
     ports:
       - "8080:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: kafka-test-cluster-2
       KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
-
 
 
   # =======================================================
@@ -343,6 +347,8 @@ services:
     image: apache/hadoop:3.4.1
     container_name: hadoop-namenode
     hostname: hadoop-namenode
+    depends_on:
+      - kafka3
     user: "root"
     restart: always
     platform: linux/amd64
@@ -448,6 +454,8 @@ services:
   spark-master:
     image: bitnamilegacy/spark:3.5.4
     container_name: spark-master
+    depends_on:
+      - hadoop-datanode-1
     ports:
       - "8888:8080"  # HTTP-порт для Web UI Spark
       - "7077:7077"  # Порт для Spark master-сервис
@@ -468,8 +476,8 @@ services:
 
   # Контейнер для модуля 'analytics-service' (по другому не очень хорошо получалось)
   # Раскомментить при необходимости запуска!
-#  analytics-service:
-#    build: .
+  analytics-service:
+    build: .
 
 
 volumes:
