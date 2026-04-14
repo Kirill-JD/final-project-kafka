@@ -11,7 +11,7 @@ countryName = RU
 organizationName = Yandex
 organizationalUnitName = Practice
 localityName = Moscow
-commonName = kafka6
+commonName = schema-registry
 
 
 [ v3_ca ]
@@ -27,10 +27,3 @@ basicConstraints = CA:FALSE
 nsComment = "OpenSSL Generated Certificate"
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth, clientAuth
-subjectAltName = @alt_names
-
-
-[ alt_names ]
-DNS.1 = kafka6
-DNS.2 = kafka6-external
-DNS.3 = localhost

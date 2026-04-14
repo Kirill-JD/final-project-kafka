@@ -50,7 +50,8 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
       KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
-      KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9875:/opt/kafka-metrics.yml"
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
+      KAFKA_JMX_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9875:/opt/kafka-metrics.yml"
     ports:
       - "9092:9092"
       - "9875:9875"
@@ -92,6 +93,7 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
       KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9876:/opt/kafka-metrics.yml"
     ports:
       - "9093:9093"
@@ -132,6 +134,7 @@ services:
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
       KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9877:/opt/kafka-metrics.yml"
     ports:
       - "9094:9094"
@@ -244,8 +247,13 @@ services:
       - kafka2
       - kafka3
     environment:
-      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-      SCHEMA_REGISTRY_KAFKA_BROKERS: PLAINTEXT://kafka1:29092,PLAINTEXT://kafka2:29093,PLAINTEXT://kafka3:29094
+      SCHEMA_REGISTRY_CFG_FILE: /opt/bitnami/schema-registry/config/schema-registry.properties
+    volumes:
+      - ./certs/schema-registry:/etc/schema-registry/secrets
+      - ./infrastructure/schema-registry/schema-registry.properties:/opt/bitnami/schema-registry/config/schema-registry.properties
+    command:
+      - /opt/bitnami/schema-registry/bin/schema-registry-start
+      - /opt/bitnami/schema-registry/config/schema-registry.properties
 
 
   # =======================================================
@@ -372,7 +380,7 @@ services:
     container_name: kafka-ui
     depends_on:
       - kafka3
-      - kafka6
+#      - kafka6
     ports:
       - "8080:8080"
     environment:
