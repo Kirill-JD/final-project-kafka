@@ -367,25 +367,34 @@ services:
   # =======================================================
   # ==================== UI kafka =========================
   # =======================================================
-  ui1:
+  kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
     depends_on:
       - kafka3
-    ports:
-      - "8079:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: kafka-test-cluster-1
-      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
-
-  ui2:
-    image: provectuslabs/kafka-ui:latest
-    depends_on:
       - kafka6
     ports:
       - "8080:8080"
     environment:
-      KAFKA_CLUSTERS_0_NAME: kafka-test-cluster-2
-      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
+      KAFKA_CLUSTERS_0_NAME: kafka-test-cluster-1
+      KAFKA_CLUSTERS_0_BOOTSTRAP_SERVERS: kafka1:29092,kafka2:29093,kafka3:29094
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: SSL
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_LOCATION: /certs/ui.truststore.jks
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_TRUSTSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_LOCATION: /certs/ui.keystore.jks
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+      KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEY_PASSWORD: ${PASSWORD_KAFKA_UI}
+
+#      KAFKA_CLUSTERS_1_NAME: kafka-test-cluster-2
+#      KAFKA_CLUSTERS_1_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
+#      KAFKA_CLUSTERS_1_PROPERTIES_SECURITY_PROTOCOL: SSL
+#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_LOCATION: /certs/ui.truststore.jks
+#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_LOCATION: /certs/ui.keystore.jks
+#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEY_PASSWORD: ${PASSWORD_KAFKA_UI}
+    volumes:
+      - ./certs/ui:/certs
 
 
   # =======================================================

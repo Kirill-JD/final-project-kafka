@@ -31,6 +31,7 @@ docker exec -it kafka-0 /bin/kafka-acls --bootstrap-server kafka-0:29092 --add -
 
 # список пользователей
 # только для модуля shop-service и первого кластера
+6 сертификатов на каждый брокер kafka
 shop-service - 1 сертификат
 client-service - 2 сертификат
 blacklist-service - 1 сертификат
