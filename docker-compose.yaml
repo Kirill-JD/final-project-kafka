@@ -22,71 +22,124 @@ services:
   kafka1:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka1
+    hostname: kafka1
     depends_on:
       - zookeeper1
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka1:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9092,SSL_INTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9092,SSL_INTERNAL://kafka1:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka1.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka1_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka1_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka1.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka1_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9875:/opt/kafka-metrics.yml"
     ports:
       - "9092:9092"
       - "9875:9875"
     volumes:
       - kafka1-data:/var/lib/kafka/data
+      - ./certs/kafka1:/etc/kafka/secrets
+      - ./certs/config/kafka1-3/server1.properties:/etc/kafka/server.properties
+      - ./certs/config/kafka1-3/adminclient-configs.conf:/tmp/adminclient-configs.conf
+      - ./certs/admin:/etc/kafka/admin
 
   kafka2:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka2
+    hostname: kafka2
     depends_on:
       - zookeeper1
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093,PLAINTEXT_INTERNAL://0.0.0.0:29093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9093,PLAINTEXT_INTERNAL://kafka2:29093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9093,SSL_INTERNAL://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9093,SSL_INTERNAL://kafka2:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka2.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka2_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka2_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka2.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka2_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9876:/opt/kafka-metrics.yml"
     ports:
       - "9093:9093"
       - "9876:9876"
     volumes:
       - kafka2-data:/var/lib/kafka/data
+      - ./certs/kafka2:/etc/kafka/secrets
+      - ./certs/config/kafka1-3/server2.properties:/etc/kafka/server.properties
 
   kafka3:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka3
+    hostname: kafka3
     depends_on:
       - zookeeper1
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: zookeeper1:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094,PLAINTEXT_INTERNAL://0.0.0.0:29094
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094,PLAINTEXT_INTERNAL://kafka3:29094
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9094,SSL_INTERNAL://0.0.0.0:29094
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9094,SSL_INTERNAL://kafka3:29094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka3.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka3_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka3_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka3.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka3_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9877:/opt/kafka-metrics.yml"
     ports:
       - "9094:9094"
       - "9877:9877"
     volumes:
       - kafka3-data:/var/lib/kafka/data
+      - ./certs/kafka3:/etc/kafka/secrets
+      - ./certs/config/kafka1-3/server3.properties:/etc/kafka/server.properties
 
 
   # =======================================================
@@ -105,6 +158,9 @@ services:
   kafka4:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka4
+    hostname: kafka4
     depends_on:
       - zookeeper2
     environment:
@@ -128,6 +184,9 @@ services:
   kafka5:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka5
+    hostname: kafka5
     depends_on:
       - zookeeper2
     environment:
@@ -151,6 +210,9 @@ services:
   kafka6:
     build:
       context: ./infrastructure/kafka
+    restart: always
+    container_name: kafka6
+    hostname: kafka6
     depends_on:
       - zookeeper2
     environment:
