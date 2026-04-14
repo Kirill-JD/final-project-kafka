@@ -56,3 +56,45 @@ es - 1 сертификат
 docker exec -it schema-registry bashkafka-broker-api-versions --bootstrap-server kafka1:29092
 
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-broker-api-versions --bootstrap-server kafka1:29092 --command-config /tmp/adminclient-configs.conf"
+
+
+
+
+
+
+
+
+========================================================================================================================
+============================================ Итоговые команды ==========================================================
+========================================================================================================================
+# 1. выдача прав брокерам (внутри кластера), kafka-ui и на кластер для продюсера
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka1,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka2,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka3,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --cluster --command-config /tmp/adminclient-configs.conf"
+
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=shop-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ClusterAction --operation Describe --cluster --command-config /tmp/adminclient-configs.conf"
+
+# 2.1. создание топиков для первого кластера
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic client-events-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic filter-product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic blacklist-words-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+
+# 3. выдача прав продюсерам и консьюмерам на топики
+# 3.0 выдача прав для ui
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --topic product-topic --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --topic client-events-topic --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --topic filter-product-topic --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --topic blacklist-words-topic --command-config /tmp/adminclient-configs.conf"
+
+# 3.1. права для shop-service
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=shop-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation WRITE --operation DESCRIBE --topic product-topic --command-config /tmp/adminclient-configs.conf"
+
+# 3.2. права для blacklist-service
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=blacklist-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation READ --operation DESCRIBE --topic product-topic --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=blacklist-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation WRITE --operation DESCRIBE --topic filter-product-topic --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=blacklist-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation READ --operation WRITE --operation DESCRIBE --topic blacklist-words-topic --command-config /tmp/adminclient-configs.conf"
+
+
+
