@@ -310,6 +310,25 @@ services:
       CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: 'kafka-connect'
+      CONNECT_SECURITY_PROTOCOL: SSL
+      CONNECT_SSL_TRUSTSTORE_LOCATION: /etc/kafka/certs/kafka-connect.truststore.jks
+      CONNECT_SSL_TRUSTSTORE_PASSWORD: password-kafka-connect
+      CONNECT_SSL_KEYSTORE_LOCATION: /etc/kafka/certs/kafka-connect.keystore.jks
+      CONNECT_SSL_KEYSTORE_PASSWORD: password-kafka-connect
+      CONNECT_SSL_KEY_PASSWORD: password-kafka-connect
+      CONNECT_CONSUMER_SECURITY_PROTOCOL: SSL
+      CONNECT_CONSUMER_SSL_TRUSTSTORE_LOCATION: /etc/kafka/certs/kafka-connect.truststore.jks
+      CONNECT_CONSUMER_SSL_TRUSTSTORE_PASSWORD: password-kafka-connect
+      CONNECT_CONSUMER_SSL_KEYSTORE_LOCATION: /etc/kafka/certs/kafka-connect.keystore.jks
+      CONNECT_CONSUMER_SSL_KEYSTORE_PASSWORD: password-kafka-connect
+      CONNECT_CONSUMER_SSL_KEY_PASSWORD: password-kafka-connect
+
+      CONNECT_PRODUCER_SECURITY_PROTOCOL: SSL
+      CONNECT_PRODUCER_SSL_TRUSTSTORE_LOCATION: /etc/kafka/certs/kafka-connect.truststore.jks
+      CONNECT_PRODUCER_SSL_TRUSTSTORE_PASSWORD: password-kafka-connect
+      CONNECT_PRODUCER_SSL_KEYSTORE_LOCATION: /etc/kafka/certs/kafka-connect.keystore.jks
+      CONNECT_PRODUCER_SSL_KEYSTORE_PASSWORD: password-kafka-connect
+      CONNECT_PRODUCER_SSL_KEY_PASSWORD: password-kafka-connect
 
       # Хранение конфигурации, смещений и статусов
       CONNECT_CONFIG_STORAGE_TOPIC: 'connect-config-storage'
@@ -328,8 +347,10 @@ services:
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       # Пути к плагинам
       CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
+      KAFKA_HEAP_OPTS: "-Xms512m -Xmx512m"
     volumes:
       - ./infrastructure/confluent-hub-components/:/etc/kafka-connect/jars
+      - ./certs/kafka-connect:/etc/kafka/certs
 
 
   # =======================================================
@@ -393,14 +414,14 @@ services:
       KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEYSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
       KAFKA_CLUSTERS_0_PROPERTIES_SSL_KEY_PASSWORD: ${PASSWORD_KAFKA_UI}
 
-#      KAFKA_CLUSTERS_1_NAME: kafka-test-cluster-2
-#      KAFKA_CLUSTERS_1_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
-#      KAFKA_CLUSTERS_1_PROPERTIES_SECURITY_PROTOCOL: SSL
-#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_LOCATION: /certs/ui.truststore.jks
-#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
-#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_LOCATION: /certs/ui.keystore.jks
-#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
-#      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEY_PASSWORD: ${PASSWORD_KAFKA_UI}
+      KAFKA_CLUSTERS_1_NAME: kafka-test-cluster-2
+      KAFKA_CLUSTERS_1_BOOTSTRAP_SERVERS: kafka4:29095,kafka5:29096,kafka6:29097
+      KAFKA_CLUSTERS_1_PROPERTIES_SECURITY_PROTOCOL: SSL
+      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_LOCATION: /certs/ui.truststore.jks
+      KAFKA_CLUSTERS_1_PROPERTIES_SSL_TRUSTSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_LOCATION: /certs/ui.keystore.jks
+      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEYSTORE_PASSWORD: ${PASSWORD_KAFKA_UI}
+      KAFKA_CLUSTERS_1_PROPERTIES_SSL_KEY_PASSWORD: ${PASSWORD_KAFKA_UI}
     volumes:
       - ./certs/ui:/certs
 
@@ -555,8 +576,8 @@ services:
 
   # Контейнер для модуля 'analytics-service' (по другому не очень хорошо получалось)
   # Раскомментить при необходимости запуска!
-  analytics-service:
-    build: .
+#  analytics-service:
+#    build: .
 
 
 volumes:
