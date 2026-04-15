@@ -1,27 +1,31 @@
-# Read Me First
-The following was discovered as part of building this project:
+# Финальный проект
 
-* The original package name 'ru.ycan.final.project.kafka' is invalid and this project uses 'com.example.demo' instead.
+### Структура проекта
+- `apps` - все модули на java/spring boot
+  - `analytics-service` - модуль для аналитики (работа с hadoop и spark). Наполнение топика рекомендаций во втором кластере
+  - `blacklist-service` - модуль для фильтрации продуктов по запрещённым названиям (работа с KStream и GlobalKTable)
+  - `client-service` - эмулятор API для взаимодействия с пользователями (поиск товаров / выдача рекомендаций)
+  - `shop-service` - эмулятор API для наполнения топика продуктов (наполнение из файлов в формате json)
+- `certs` - каталог сертификатов для работы брокеров
+- `infrastructure` - все вспомогательные файлы для работы приложения (метрики, алерты, запросы для коннекторов итд)
+- `libs` - общие вспомогательные модули для работы приложения (по сути только Avro схемы и кодген при билде)
+- `scripts` - команды настройки доступов для участников взаимодействия с приложением
 
-# Getting Started
+### Используемые технологии
+- Zookeeper / Kafka / Kafka-Connect / KStream / MM2 / SchemaRegistry / Avro
+- Prometheus / Grafana
+- ElasticSearch
+- Hadoop (Hdfs) / Spark
 
-### Reference Documentation
-For further reference, please consider the following sections:
+### Запуск приложения
+1) запустить `docker-compose.yaml`
+2) выполнить команды из файла `scripts/commands`
+3) выставить в .env `KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND=false`
+4) перезапустить `docker-compose.yaml`
+5) выполнить запросы для коннекторов из `infrastructure/kafka-connect/script` и `infrastructure/mm2/script`
+6) запустить `shop-service`
+7) запустить `blacklist-service`
+8) раскомментировать в `docker-compose.yaml` блок для `analytics-service` и запустить
+9) запустить `shop-service`
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/4.0.5/gradle-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/4.0.5/gradle-plugin/packaging-oci-image.html)
-* [Spring for Apache Kafka](https://docs.spring.io/spring-boot/4.0.5/reference/messaging/kafka.html)
-* [Apache Kafka Streams Support](https://docs.spring.io/spring-kafka/reference/streams.html)
-* [Apache Kafka Streams Binding Capabilities of Spring Cloud Stream](https://docs.spring.io/spring-cloud-stream/reference/kafka/kafka-streams-binder/usage.html)
-
-### Guides
-The following guides illustrate how to use some features concretely:
-
-* [Samples for using Apache Kafka Streams with Spring Cloud stream](https://github.com/spring-cloud/spring-cloud-stream-samples/tree/main/kafka-streams-samples)
-
-### Additional Links
-These additional references should also help you:
-
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-
+### Архитектура и краткое описание логики приложения

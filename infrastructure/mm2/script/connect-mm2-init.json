@@ -8,5 +8,6 @@
   "producer.override.bootstrap.servers": "kafka4:29095,kafka5:29096,kafka6:29097",
   "offset-syncs.topic.replication.factor": "2",
   "refresh.topics.interval.seconds": "30",
-  "replication.policy.class": "org.apache.kafka.connect.mirror.IdentityReplicationPolicy"
+  "replication.policy.class": "org.apache.kafka.connect.mirror.IdentityReplicationPolicy",
+  "sync.topic.acls.enabled": "false"
 }
