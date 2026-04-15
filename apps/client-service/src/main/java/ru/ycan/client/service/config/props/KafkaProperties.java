@@ -11,6 +11,15 @@ public record KafkaProperties(Consumer consumer,
                            @JsonProperty(value = "value-deserializer") String valueDeserializer,
                            @JsonProperty(value = "schema-registry-url") String schemaRegistryUrl,
                            @JsonProperty(value = "specific-avro-reader") String specificAvroReader,
-                           String acks, String retries) {}
+                           String acks, String retries, Ssl ssl) {}
     public record Topics(String in, String out) {}
+
+    public record Ssl(
+            @JsonProperty(value = "security-protocol") String securityProtocol,
+            @JsonProperty(value = "truststore-location") String truststoreLocation,
+            @JsonProperty(value = "truststore-password") String truststorePassword,
+            @JsonProperty(value = "keystore-location") String keystoreLocation,
+            @JsonProperty(value = "keystore-password") String keystorePassword,
+            @JsonProperty(value = "key-password") String keyPassword
+    ) {}
 }

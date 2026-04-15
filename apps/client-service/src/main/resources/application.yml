@@ -6,6 +6,14 @@ spring:
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       acks: all
       retries: 3
+      security:
+        protocol: SSL
+      ssl:
+        truststore-location: ./certs/client-service-producer/client-service-producer.truststore.jks
+        truststore-password: password-client-service-producer
+        keystore-location: ./certs/client-service-producer/client-service-producer.keystore.jks
+        keystore-password: password-client-service-producer
+        key-password: password-client-service-producer
       properties:
         schema.registry.url: http://localhost:8081
 
@@ -22,6 +30,14 @@ kafka:
     retries: 3
     schema-registry-url: http://localhost:8081
     specific-avro-reader: true
+    ssl:
+      # проставить актуальные абсолютные пути
+      security-protocol: SSL
+      truststore-location: C:\Users\ycanr\IdeaProjects\final-project-kafka\apps\client-service\src\main\resources\certs\client-service-consumer\client-service-consumer.truststore.jks
+      truststore-password: password-client-service-consumer
+      keystore-location: C:\Users\ycanr\IdeaProjects\final-project-kafka\apps\client-service\src\main\resources\certs\client-service-consumer\client-service-consumer.keystore.jks
+      keystore-password: password-client-service-consumer
+      key-password: password-client-service-consumer
   topics:
     in: recommendation-product-topic
     out: client-events-topic
