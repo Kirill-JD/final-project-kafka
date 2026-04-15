@@ -71,16 +71,31 @@ docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS=''
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka1,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka2,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka3,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka4:29095 --add --allow-principal User:CN=kafka4,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka4:29095 --add --allow-principal User:CN=kafka5,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka4:29095 --add --allow-principal User:CN=kafka6,L=Moscow,OU=Practice,O=Yandex,C=RU --operation All --cluster --command-config /tmp/adminclient-configs.conf"
+
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --cluster --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka4:29095 --add --allow-principal User:CN=ui,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ALL --cluster --command-config /tmp/adminclient-configs.conf"
 
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=shop-service,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ClusterAction --operation Describe --cluster --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-acls --bootstrap-server kafka1:29092 --add --allow-principal User:CN=kafka-connect,L=Moscow,OU=Practice,O=Yandex,C=RU --operation ClusterAction --operation Describe --cluster --command-config /tmp/adminclient-configs.conf"
+
 
 # 2.1. создание топиков для первого кластера
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic client-events-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic filter-product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
 docker exec -it kafka1 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka1:29092 --create --topic blacklist-words-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+
+# 2.1. создание топиков для второго кластера
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka4:29095 --create --topic product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka4:29095 --create --topic client-events-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka4:29095 --create --topic filter-product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka4:29095 --create --topic blacklist-words-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+docker exec -it kafka4 bash -c "export KAFKA_OPTS='' && export KAFKA_JMX_OPTS='' && /bin/kafka-topics --bootstrap-server kafka4:29095 --create --topic recommendation-product-topic --partitions 3 --replication-factor 3 --command-config /tmp/adminclient-configs.conf"
+
 
 # 3. выдача прав продюсерам и консьюмерам на топики
 # 3.0 выдача прав для ui

@@ -169,20 +169,37 @@ services:
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9095,PLAINTEXT_INTERNAL://0.0.0.0:29095
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9095,PLAINTEXT_INTERNAL://kafka4:29095
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9095,SSL_INTERNAL://0.0.0.0:29095
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9095,SSL_INTERNAL://kafka4:29095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka4.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka4_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka4_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka4.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka4_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9878:/opt/kafka-metrics.yml"
     ports:
       - "9095:9095"
       - "9878:9878"
     volumes:
       - kafka4-data:/var/lib/kafka/data
+      - ./certs/kafka4:/etc/kafka/secrets
+      - ./certs/config/kafka4-6/server4.properties:/etc/kafka/server.properties
+      - ./certs/config/kafka4-6/adminclient-configs.conf:/tmp/adminclient-configs.conf
+      - ./certs/admin:/etc/kafka/admin
 
   kafka5:
     build:
@@ -195,20 +212,35 @@ services:
     environment:
       KAFKA_BROKER_ID: 5
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9096,PLAINTEXT_INTERNAL://0.0.0.0:29096
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9096,PLAINTEXT_INTERNAL://kafka5:29096
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9096,SSL_INTERNAL://0.0.0.0:29096
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9096,SSL_INTERNAL://kafka5:29096
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka5.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka5_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka5_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka5.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka5_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9879:/opt/kafka-metrics.yml"
     ports:
       - "9096:9096"
       - "9879:9879"
     volumes:
       - kafka5-data:/var/lib/kafka/data
+      - ./certs/kafka5:/etc/kafka/secrets
+      - ./certs/config/kafka4-6/server5.properties:/etc/kafka/server.properties
 
   kafka6:
     build:
@@ -221,20 +253,35 @@ services:
     environment:
       KAFKA_BROKER_ID: 6
       KAFKA_ZOOKEEPER_CONNECT: zookeeper2:2182
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9097,PLAINTEXT_INTERNAL://0.0.0.0:29097
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9097,PLAINTEXT_INTERNAL://kafka6:29097
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+      KAFKA_DELETE_TOPIC_ENABLE: true
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
       KAFKA_DEFAULT_REPLICATION_FACTOR: 3
       KAFKA_MIN_INSYNC_REPLICAS: 2
-      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENERS: SSL://0.0.0.0:9097,SSL_INTERNAL://0.0.0.0:29097
+      KAFKA_ADVERTISED_LISTENERS: SSL://localhost:9097,SSL_INTERNAL://kafka6:29097
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL,SSL_INTERNAL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL_INTERNAL
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka6.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: kafka6_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: kafka6_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka6.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: kafka6_truststore_creds
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: https
+      KAFKA_SSL_CLIENT_AUTH: required
+      KAFKA_CONFIG_FILE: /etc/kafka/server.properties
+      KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: ${KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND}
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS}
+      KAFKA_SUPER_USERS: ${KAFKA_SUPER_USERS}
       KAFKA_OPTS: "-javaagent:/opt/jmx_prometheus_javaagent-0.15.0.jar=9880:/opt/kafka-metrics.yml"
     ports:
       - "9097:9097"
       - "9880:9880"
     volumes:
       - kafka6-data:/var/lib/kafka/data
+      - ./certs/kafka6:/etc/kafka/secrets
+      - ./certs/config/kafka4-6/server6.properties:/etc/kafka/server.properties
 
 
   schema-registry:
@@ -401,7 +448,7 @@ services:
     container_name: kafka-ui
     depends_on:
       - kafka3
-#      - kafka6
+      - kafka6
     ports:
       - "8080:8080"
     environment:
