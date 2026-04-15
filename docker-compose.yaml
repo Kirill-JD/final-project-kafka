@@ -632,6 +632,13 @@ services:
     environment:
       SPARK_MODE: master
       SPARK_MASTER_HOST: spark-master
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/certs/analytics-service.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: password-analytics-service
+      KAFKA_SSL_KEYSTORE_LOCATION: /opt/certs/analytics-service.keystore.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: password-analytics-service
+      KAFKA_SSL_KEY_PASSWORD: password-analytics-service
+    volumes:
+      - ./certs/analytics-service:/opt/certs
 
   # Apache Spark worker node
   spark-worker:
@@ -642,6 +649,13 @@ services:
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark-master:7077
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /opt/certs/analytics-service.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: password-analytics-service
+      KAFKA_SSL_KEYSTORE_LOCATION: /opt/certs/analytics-service.keystore.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: password-analytics-service
+      KAFKA_SSL_KEY_PASSWORD: password-analytics-service
+    volumes:
+      - ./certs/analytics-service:/opt/certs
 
 
   # Контейнер для модуля 'analytics-service' (по другому не очень хорошо получалось)

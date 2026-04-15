@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class SchemaRegistryConfig {
     @Bean
     public SchemaRegistryClient schemaRegistryClient(
-            @Value("${spring.kafka.producer.properties.schema.registry.url}") String url) {
+            @Value("${spring.kafka.properties.schema.registry.url}") String url) {
         return new CachedSchemaRegistryClient(url, 100);
     }
 }

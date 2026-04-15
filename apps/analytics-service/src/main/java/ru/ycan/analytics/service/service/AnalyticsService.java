@@ -8,6 +8,7 @@ import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 import ru.ycan.analytics.service.config.props.AnalyticsProperties;
 import ru.ycan.analytics.service.config.props.HdfsProperties;
@@ -29,6 +30,7 @@ public class AnalyticsService {
     private final AnalyticsProperties analyticsProperties;
     private final SchemaRegistryService schemaRegistryService;
     private final SparkSession spark;
+    private final KafkaProperties properties;
     @Value("${spring.kafka.bootstrap-servers}")
     String bootstrapServers;
 
@@ -38,6 +40,12 @@ public class AnalyticsService {
                                     .option("kafka.bootstrap.servers", bootstrapServers)
                                     .option("subscribe", kafkaTopicsProperties.in())
                                     .option("startingOffsets", "earliest")
+                                    .option("kafka.security.protocol", properties.getProperties().get("security.protocol"))
+                                    .option("kafka.ssl.truststore.location", properties.getProperties().get("ssl.truststore.location"))
+                                    .option("kafka.ssl.truststore.password", properties.getProperties().get("ssl.truststore.password"))
+                                    .option("kafka.ssl.keystore.location", properties.getProperties().get("ssl.keystore.location"))
+                                    .option("kafka.ssl.keystore.password", properties.getProperties().get("ssl.keystore.password"))
+                                    .option("kafka.ssl.key.password", properties.getProperties().get("ssl.key.password"))
                                     .load();
 
         Dataset<Row> valueDf = kafkaDf.selectExpr("substring(value, 6) as value");

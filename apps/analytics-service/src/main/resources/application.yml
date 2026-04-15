@@ -6,8 +6,14 @@ spring:
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       acks: all
       retries: 3
-      properties:
-        schema.registry.url: http://schema-registry:8081
+    properties:
+      security.protocol: SSL
+      ssl.keystore.location: /app/certs/analytics-service.keystore.jks
+      ssl.keystore.password: password-analytics-service
+      ssl.key.password: password-analytics-service
+      ssl.truststore.location: /app/certs/analytics-service.truststore.jks
+      ssl.truststore.password: password-analytics-service
+      schema.registry.url: http://schema-registry:8081
 
 
 kafka:

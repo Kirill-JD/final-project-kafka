@@ -4,6 +4,8 @@ WORKDIR /app
 
 # копируем уже собранный fatJar
 COPY apps/analytics-service/build/libs/app.jar app.jar
+# копируем сертификаты
+COPY certs/analytics-service certs
 
 ENV HADOOP_USER_NAME=root
 
