@@ -1,10 +1,10 @@
 rootProject.name = "final-project-kafka"
 
 include(
-    ":apps:shop-producer",
-    "apps:client-service",
-    "apps:common",
-    "apps:stream-processor",
-    "apps:analytics-service",
-    "apps:blacklist-service"
+    ":apps:analytics-service",
+    ":apps:blacklist-service",
+    ":apps:client-service",
+    ":apps:shop-service"
 )
+
+include(":libs:avro-schemas")

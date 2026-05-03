@@ -1,0 +1,31 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.BooleanSerializer
+      acks: all
+      retries: 3
+    streams:
+      application-id: blacklist-app
+      properties:
+        default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+        default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+        schema.registry.url: http://localhost:8081
+        specific.avro.reader: true
+    properties:
+      security.protocol: SSL
+      # подставить для ssl.*store.location абсолютные пути до файлов
+      ssl.truststore.location: C:\Users\ycanr\IdeaProjects\final-project-kafka\apps\blacklist-service\src\main\resources\certs\blacklist-service.truststore.jks
+#      ssl.truststore.location: src/main/resources/certs/blacklist-service.truststore.jks
+      ssl.truststore.password: password-blacklist-service
+      ssl.keystore.location: C:\Users\ycanr\IdeaProjects\final-project-kafka\apps\blacklist-service\src\main\resources\certs\blacklist-service.keystore.jks
+#      ssl.keystore.location: src/main/resources/certs/blacklist-service.keystore.jks
+      ssl.keystore.password: password-blacklist-service
+      ssl.key.password: password-blacklist-service
+
+kafka:
+  topics:
+    in: product-topic
+    out: filter-product-topic
+    global: blacklist-words-topic

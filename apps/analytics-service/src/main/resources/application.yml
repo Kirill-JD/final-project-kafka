@@ -1,0 +1,31 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka4:29095,kafka5:29096,kafka6:29097
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      retries: 3
+    properties:
+      security.protocol: SSL
+      ssl.keystore.location: /app/certs/analytics-service.keystore.jks
+      ssl.keystore.password: password-analytics-service
+      ssl.key.password: password-analytics-service
+      ssl.truststore.location: /app/certs/analytics-service.truststore.jks
+      ssl.truststore.password: password-analytics-service
+      schema.registry.url: http://schema-registry:8081
+
+
+kafka:
+  topics:
+    in: filter-product-topic
+    out: recommendation-product-topic
+
+hdfs:
+  url: hdfs://hadoop-namenode:9000
+  path: /data/analytics
+
+analytics:
+  column: category
+  values:
+    - Электроника

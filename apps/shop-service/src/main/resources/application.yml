@@ -1,0 +1,26 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+      retries: 3
+      security:
+        protocol: SSL
+      ssl:
+        truststore-location: ./certs/shop-service.truststore.jks
+        truststore-password: password-shop-service
+        keystore-location: ./certs/shop-service.keystore.jks
+        keystore-password: password-shop-service
+        key-password: password-shop-service
+      properties:
+        schema.registry.url: http://localhost:8081
+
+kafka:
+  topics:
+    out: product-topic
+
+files:
+  input:
+    path: products

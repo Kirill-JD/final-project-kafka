@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 10s
+
+rule_files:
+  - "alerts.yml"
+
+scrape_configs:
+  - job_name: kafka
+    static_configs:
+      - targets:
+          - kafka1:9875
+          - kafka2:9876
+          - kafka3:9877
+          - kafka4:9878
+          - kafka5:9879
+          - kafka6:9880
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:10000

@@ -1,0 +1,26 @@
+{
+  "name": "mirror2",
+  "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
+  "source.cluster.alias": "source",
+  "topics.regex": ".*",
+  "source.cluster.bootstrap.servers": "kafka1:29092,kafka2:29093,kafka3:29094",
+  "target.cluster.bootstrap.servers": "kafka4:29095,kafka5:29096,kafka6:29097",
+  "producer.override.bootstrap.servers": "kafka4:29095,kafka5:29096,kafka6:29097",
+  "offset-syncs.topic.replication.factor": "2",
+  "refresh.topics.interval.seconds": "30",
+  "replication.policy.class": "org.apache.kafka.connect.mirror.IdentityReplicationPolicy",
+  "sync.topic.acls.enabled": "false",
+  "source.cluster.security.protocol": "SSL",
+  "source.cluster.ssl.truststore.location": "/etc/kafka/certs/mm2.truststore.jks",
+  "source.cluster.ssl.truststore.password": "password-mm2",
+  "source.cluster.ssl.keystore.location": "/etc/kafka/certs/mm2.keystore.jks",
+  "source.cluster.ssl.keystore.password": "password-mm2",
+  "source.cluster.ssl.key.password": "password-mm2",
+
+  "target.cluster.security.protocol": "SSL",
+  "target.cluster.ssl.truststore.location": "/etc/kafka/certs/mm2.truststore.jks",
+  "target.cluster.ssl.truststore.password": "password-mm2",
+  "target.cluster.ssl.keystore.location": "/etc/kafka/certs/mm2.keystore.jks",
+  "target.cluster.ssl.keystore.password": "password-mm2",
+  "target.cluster.ssl.key.password": "password-mm2"
+}
